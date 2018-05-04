@@ -1,0 +1,15 @@
+<div class="uk-form-row">
+  <div class="uk-alert uk-alert-warning">
+    {lang_read}
+{!if termsofuse}
+    {termsofuse}
+{!endif}
+{!if privacypolicy}
+  {!if termsofuse}
+    {lang_and} {privacypolicy}
+  {!else}
+    {privacypolicy}
+  {!endif}
+{!endif}
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<plugin>
+    <id>privacy</id>
+    <name>Privacy</name>
+    <description>User Privacy Enhancements</description>
+    <version>0.0.1</version>
+    <glfusionversion>1.7.4</glfusionversion>
+    <phpversion>5.6.0</phpversion>
+    <url>https://www.glfusion.org</url>
+    <maintainer>Mark R. Evans</maintainer>
+</plugin>
