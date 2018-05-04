@@ -30,7 +30,7 @@ function privacy_upgrade()
     $currentVersion = DB_getItem($_TABLES['plugins'],'pi_version',"pi_name='privacy'");
 
     switch( $currentVersion ) {
-        case '0.0.1' :
+        case '1.0.0' :
             // fall through
 
         default :
