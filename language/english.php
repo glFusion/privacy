@@ -30,7 +30,7 @@ $LANG_PRIVACY = array (
     'privacy_policy'    => 'Privacy Policy',
     'personal_data'     => 'Personal Data',
     'download'          => 'Download Personal Data',
-    'download_help'     => 'Export your personal data',
+    'download_help'     => 'Export the personal data stored on this site in XML format.',
 );
 
 $PLG_privacy_MESSAGE1 = 'Privacy Plugin upgrade: Update completed successfully.';
