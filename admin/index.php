@@ -17,5 +17,19 @@
  *
  */
 
-die();
+require_once '../../../lib-common.php';
+require_once '../../auth.inc.php';
+
+// Only let admin users access this page
+if (!SEC_hasRights('privacy.admin')) {
+    COM_errorLog("Someone has tried to access the Privacy Admin page.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: $REMOTE_ADDR",1);
+    $display = COM_siteHeader();
+    $display .= COM_startBlock($LANG_PRIVACY['access_denied']);
+    $display .= $LANG_PRIVACY['access_denied_msg'];
+    $display .= COM_endBlock();
+    $display .= COM_siteFooter(true);
+    echo $display;
+    exit;
+}
+COM_404();
 ?>

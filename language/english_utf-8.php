@@ -31,6 +31,41 @@ $LANG_PRIVACY = array (
     'personal_data'     => 'Personal Data',
     'download'          => 'Download Personal Data',
     'download_help'     => 'Export the personal data stored on this site in XML format.',
+    'no_privacypolicy'  => 'Do not Link to Privacy Policy',
+    'no_termsofuse'     => 'Do Not Link to Terms Of Use',
+);
+
+// Localization of the Admin Configuration UI
+$LANG_configsections['privacy'] = array(
+    'label' => 'Privacy',
+    'title' => 'Privacy Configuration'
+);
+
+$LANG_confignames['privacy'] = array(
+    'cookieconsent' => 'Enable Cookie Consent Bar',
+    'exportuser'    => 'Add Export Personal Data to My Account Privacy Panel',
+    'registrationlinks' => 'Add Links to Privacy Polic / Terms Of Use to Registration Screen',
+    'privacypolicy' => 'Privacy Policy Static Page',
+    'termsofuse'   => 'Terms Of Use Static Page',
+    'cookiestyle' => 'Cookie Bar Style',
+    'cookieposition' => 'Cookie Bar Location',
+    'cookietext' => 'Text for Cookie Bar',
+    'cookielearnmore' => 'Learn More Link',
+);
+
+$LANG_configsubgroups['privacy'] = array(
+    'sg_main' => 'Configuration Settings'
+);
+
+$LANG_fs['privacy'] = array(
+    'pv_settings' => 'Privacy Features',
+    'pv_cookie'   => 'Consent Cookie Settings',
+);
+
+$LANG_configselects['privacy'] = array(
+    0 => array('True' => 1, 'False' => 0),
+    1 => array('Bottom' => 'bottom', 'Top' => 'top', 'Top (pushdown)' => 'top_pushdown', 'Float Right' => 'bottom-right', 'Float Left' => 'bottom-left'),
+    2 => array('Block' => 'block', 'Classic' => 'classic', 'Edgeless' => 'edgeless'),
 );
 
 $PLG_privacy_MESSAGE1 = 'Privacy Plugin upgrade: Update completed successfully.';

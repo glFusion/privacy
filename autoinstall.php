@@ -35,7 +35,16 @@ $INSTALL_plugin['privacy'] = array(
 
   'plugin' => array('type' => 'plugin', 'name' => $_PV_CONF['pi_name'],
         'ver' => $_PV_CONF['pi_version'], 'gl_ver' => $_PV_CONF['gl_version'],
-        'url' => $_PV_CONF['pi_url'], 'display' => $_PV_CONF['pi_display_name'])
+        'url' => $_PV_CONF['pi_url'], 'display' => $_PV_CONF['pi_display_name']),
+
+  array('type' => 'group', 'group' => 'Privacy Admin', 'desc' => 'Users in this group can administer the Privacy plugin',
+        'variable' => 'admin_group_id', 'addroot' => true, 'admin' => true),
+
+  array('type' => 'feature', 'feature' => 'privacy.admin', 'desc' => 'Ability to administer the Privacy Plugin',
+        'variable' => 'admin_feature_id'),
+
+  array('type' => 'mapping', 'group' => 'admin_group_id', 'feature' => 'admin_feature_id',
+        'log' => 'Adding feature to the admin group'),
 );
 
 
@@ -65,6 +74,20 @@ function plugin_install_privacy()
     return true;
 }
 
+/**
+* Loads the configuration records for the Online Config Manager
+*
+* @return   boolean     true = proceed with install, false = an error occured
+*
+*/
+function plugin_load_configuration_privacy()
+{
+    global $_CONF;
+
+    require_once $_CONF['path'].'plugins/privacy/install_defaults.php';
+
+    return plugin_initconfig_privacy();
+}
 
 /**
 * Automatic uninstall function for plugins
@@ -85,9 +108,9 @@ function plugin_autouninstall_privacy ()
         /* give the name of the tables, without $_TABLES[] */
         'tables' => array(),
         /* give the full name of the group, as in the db */
-        'groups' => array(),
+        'groups' => array('Privacy Admin'),
         /* give the full name of the feature, as in the db */
-        'features' => array(),
+        'features' => array('privacy.admin'),
         /* give the full name of the block, including 'phpblock_', etc */
         'php_blocks' => array(),
         /* give all vars with their name */

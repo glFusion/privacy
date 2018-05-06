@@ -69,6 +69,55 @@ function plugin_upgrade_privacy() {
     return privacy_upgrade();
 }
 
+/**
+* This will put an option for forum admin in the command and control block on moderation.php
+*
+*/
+function plugin_cclabel_privacyXX()
+{
+    global $_CONF;
+
+    if (SEC_hasRights('privacy.admin')) {
+        return array('Privacy',$_CONF['site_admin_url'].'/plugins/privacy/index.php',$_CONF['site_url'].'/privacy/images/privacy.png');
+    }
+}
+
+/**
+* returns the administrative option for this plugin
+*
+*/
+function plugin_getadminoption_privacyXX()
+{
+    global $_TABLES, $_CONF;
+
+    if (SEC_hasRights('privacy.admin')) {
+        return array('Privacy', $_CONF['site_admin_url'] . '/plugins/privacy/index.php', '');
+    }
+}
+
+
+/**
+ * Return URL to configuration documentation
+ *
+ * @return  string   Full URL to configuration documentation
+ */
+function plugin_getconfigelementhelp_privacy($type, $option, $doclang = 'english' )
+{
+    global $_CONF;
+
+    $retval = '';
+
+    $baseUrl = $_CONF['site_url'];
+    $cfg = 'privacy/docs/' . $doclang . '/config.html';
+    if (@file_exists($_CONF['path_html'].$cfg)) {
+        $descUrl = $baseUrl . '/' . $cfg;
+    } else {
+        $descUrl = $baseUrl . '/plugins/privacy/docs/english/config.html';
+    }
+    $retval = $descUrl;
+
+    return array($retval,0);
+}
 
 /**
  * Adds Download Personal Data button to Privacy panel in account profile
@@ -77,13 +126,17 @@ function plugin_upgrade_privacy() {
  */
 function plugin_profileedit_privacy($uid,$panel,$fieldset)
 {
-    global $_CONF, $LANG_PRIVACY;
+    global $_CONF, $_PV_CONF, $_USER, $LANG_PRIVACY;
 
     $retval = '';
+
+    if ( $_PV_CONF['exportuser'] != true ) return $retval;
 
     if ( COM_isAnonUser() ) {
         return $retval;
     }
+
+    if ( $uid != $_USER['uid']) return $retval;
 
     if ( $panel == 'privacy' && $fieldset == 'privacy' ) {
 
@@ -117,46 +170,76 @@ function plugin_profileedit_privacy($uid,$panel,$fieldset)
  */
 function plugin_templatesetvars_privacy($templatename, $template)
 {
-    global $_CONF, $_TABLES, $_PLUGIN_INFO, $LANG_PRIVACY, $LANG_STATIC;
+    global $_CONF, $_PV_CONF, $_TABLES, $_PLUGIN_INFO, $LANG_PRIVACY, $LANG_STATIC;
 
-    if ( $templatename != 'registration') return;
+    if ( $templatename != 'registration' && $templatename != 'footer' ) return;
 
-    if ( !isset($_PLUGIN_INFO['staticpages'])) return;
+    switch ($templatename) {
+        case 'registration' :
+            if ( $_PV_CONF['registrationlinks'] != true ) break;
+            if ( !isset($_PLUGIN_INFO['staticpages'])) return;
+            if ($_PV_CONF['privacypolicy'] == '' && $_PV_CONF['termsofuse'] == '' ) return;
 
-    $retval = '';
-    $termsOfUse = '';
-    $privacyPolicy = '';
+            $retval = '';
+            $termsOfUse = '';
+            $privacyPolicy = '';
 
-    $id = DB_getItem($_TABLES['staticpage'],'sp_id',"sp_id='terms-of-use'");
-    if ( $id != '' ) {
-        $url = COM_buildUrl( $_CONF['site_url'] . '/page.php?page=' . 'terms-of-use');
-        $termsOfUse = COM_createLink($LANG_PRIVACY['terms'], $url,array('target'=>'_blank','title'=>$LANG_STATIC['title_display']));
+            if ( $_PV_CONF['termsofuse'] != '' ) {
+                $id = DB_getItem($_TABLES['staticpage'],'sp_id',"sp_id='".DB_escapeString($_PV_CONF['termsofuse'])."'");
+                if ( $id != '' ) {
+                    $url = COM_buildUrl( $_CONF['site_url'] . '/page.php?page=' . $_PV_CONF['termsofuse']);
+                    $termsOfUse = COM_createLink($LANG_PRIVACY['terms'], $url,array('target'=>'_blank','title'=>$LANG_STATIC['title_display']));
+                }
+            }
+            if ( $_PV_CONF['privacypolicy'] != '' ) {
+                $id = DB_getItem($_TABLES['staticpage'],'sp_id',"sp_id='".DB_escapeString($_PV_CONF['privacypolicy'])."'");
+                if ( $id != '' ) {
+                    $url = COM_buildUrl( $_CONF['site_url'] . '/page.php?page=' . $_PV_CONF['privacypolicy']);
+                    $privacyPolicy = COM_createLink($LANG_PRIVACY['privacy_policy'], $url,array('target'=>'_blank','title'=>$LANG_STATIC['title_display']));
+                }
+            }
+            if ($privacyPolicy != '' || $termsOfUse != '' ) {
+                $T = new Template($_CONF['path'] . 'plugins/privacy/templates/');
+                $T->set_file ('registrationhook','registration.thtml');
+                $T->set_var (array(
+                        'lang_read'             => $LANG_PRIVACY['read'],
+                        'lang_and'              => $LANG_PRIVACY['and'],
+                ));
+                if ( $termsOfUse != '' ) {
+                    $T->set_var('termsofuse', $termsOfUse);
+                }
+                if ( $privacyPolicy != '' ) {
+                    $T->set_var('privacypolicy',$privacyPolicy);
+                }
+
+                $T->parse ('output', 'registrationhook');
+                $retval = $T->finish ($T->get_var('output'));
+            }
+            $template->set_var('plugin_fields', $retval);
+            break;
+        case 'footer' :
+
+            if ( $_PV_CONF['cookieconsent'] != 1 ) return;
+
+            $T = new Template($_CONF['path'] . 'plugins/privacy/templates/');
+            $T->set_file ('consent','cookieconsent.thtml');
+
+            $T->set_var(array(
+                'theme' => $_PV_CONF['cookiestyle'] == 'block' ? '' : $_PV_CONF['cookiestyle'],
+                'showlink' => $_PV_CONF['cookielearnmore'],
+                'position' => $_PV_CONF['cookieposition'],
+            ));
+            if ( $_PV_CONF['cookieposition'] == 'top_pushdown' ) {
+                $T->set_var(array(
+                    'position' => 'top',
+                    'static'   => 'true',
+                ));
+            }
+            $T->parse ('output', 'consent');
+            $retval = $T->finish ($T->get_var('output'));
+            $template->set_var('raw-footer', $retval);
+            break;
     }
-
-    $id = DB_getItem($_TABLES['staticpage'],'sp_id',"sp_id='privacy-policy'");
-    if ( $id != '' ) {
-        $url = COM_buildUrl( $_CONF['site_url'] . '/page.php?page=' . 'privacy-policy');
-        $privacyPolicy = COM_createLink($LANG_PRIVACY['privacy_policy'], $url,array('target'=>'_blank','title'=>$LANG_STATIC['title_display']));
-    }
-
-    if ($privacyPolicy != '' || $termsOfUse != '' ) {
-        $T = new Template($_CONF['path'] . 'plugins/privacy/templates/');
-        $T->set_file ('registrationhook','registration.thtml');
-        $T->set_var (array(
-                'lang_read'             => $LANG_PRIVACY['read'],
-                'lang_and'              => $LANG_PRIVACY['and'],
-        ));
-        if ( $termsOfUse != '' ) {
-            $T->set_var('termsofuse', $termsOfUse);
-        }
-        if ( $privacyPolicy != '' ) {
-            $T->set_var('privacypolicy',$privacyPolicy);
-        }
-
-        $T->parse ('output', 'registrationhook');
-        $retval = $T->finish ($T->get_var('output'));
-    }
-    $template->set_var('plugin_fields', $retval);
 }
 
 
@@ -184,7 +267,7 @@ function PRIVACY_export()
     foreach ($_USER AS $item => $value) {
         if ( in_array($item,$toExport) ) {
             if ( $item == 'lastlogin' ) {
-                $dt = new Date('now',$_USER['tzid']);
+                $dt = new Date($value,$_USER['tzid']);
                 $value = $dt->format($dt->getUserFormat(),true);
             }
             $exportData .= '<'.$item.'>'.addSlashes($value).'</'.$item.'>'.LB;
@@ -209,6 +292,20 @@ function PRIVACY_export()
     die();
 }
 
+
+function plugin_getheadercode_privacy()
+{
+    global $_CONF, $_PV_CONF;
+
+    if ( $_PV_CONF['cookieconsent'] != 1 ) return;
+
+    $outputHandle = outputHandler::getInstance();
+    $outputHandle->addLinkScriptFooter($_CONF['site_url'].'/privacy/js/cookieconsent.min.js');
+    $outputHandle->addLinkStyle($_CONF['site_url'].'/privacy/js/cookieconsent.min.css');
+    return;
+}
+
+
 // function for testing - disabled in prod
 function plugin_privacy_export_privacyXX($uid,$email='',$username='',$ip='')
 {
@@ -222,4 +319,63 @@ function plugin_privacy_export_privacyXX($uid,$email='',$username='',$ip='')
     return $retval;
 }
 
+/**
+* Helper function: Provide themes dropdown
+*
+* @return   Array   Array of (filename, displayname) pairs
+*
+* @note     Beautifying code duplicated from usersettings.php
+*
+*/
+function plugin_configmanager_select_privacypolicy_privacy()
+{
+    global $_CONF, $_PV_CONF, $_TABLES, $_USER, $_PLUGIN_INFO, $LANG_PRIVACY;
+
+    if ( !isset($_PLUGIN_INFO['staticpages'])) return;
+
+    $pages = array();
+
+    $pages[$LANG_PRIVACY['no_privacypolicy']] = '';
+
+    $result = DB_query("SELECT sp_id, sp_title FROM {$_TABLES['staticpage']} WHERE sp_status = 1 " . COM_getPermSql('AND'). " ORDER BY sp_title ASC");
+    $rows = DB_fetchAll($result);
+    foreach($rows AS $row) {
+        $pages[htmlentities($row['sp_title'])] = $row['sp_id'];
+    }
+
+    return $pages;
+}
+
+/**
+* Helper function: Provide themes dropdown
+*
+* @return   Array   Array of (filename, displayname) pairs
+*
+* @note     Beautifying code duplicated from usersettings.php
+*
+*/
+function plugin_configmanager_select_termsofuse_privacy()
+{
+    global $_CONF, $_PV_CONF, $_TABLES, $_USER, $_PLUGIN_INFO, $LANG_PRIVACY;
+
+    if ( !isset($_PLUGIN_INFO['staticpages'])) return;
+
+    $pages = array();
+    $pages[$LANG_PRIVACY['no_termsofuse']] = '';
+    $result = DB_query("SELECT sp_id, sp_title FROM {$_TABLES['staticpage']} WHERE sp_status = 1 " . COM_getPermSql('AND'). " ORDER BY sp_title ASC");
+    $rows = DB_fetchAll($result);
+    foreach($rows AS $row) {
+        $pages[htmlentities($row['sp_title'])] = $row['sp_id'];
+    }
+
+    return $pages;
+}
+
+function PRIVACY_cleanXML($text)
+{
+
+
+    return $text;
+
+}
 ?>
