@@ -204,6 +204,7 @@ function plugin_templatesetvars_privacy($templatename, $template)
                 $T->set_var (array(
                         'lang_read'             => $LANG_PRIVACY['read'],
                         'lang_and'              => $LANG_PRIVACY['and'],
+                        'lang_posttext'         => $LANG_PRIVACY['reg_posttext'],
                 ));
                 if ( $termsOfUse != '' ) {
                     $T->set_var('termsofuse', $termsOfUse);
@@ -215,7 +216,7 @@ function plugin_templatesetvars_privacy($templatename, $template)
                 $T->parse ('output', 'registrationhook');
                 $retval = $T->finish ($T->get_var('output'));
             }
-            $template->set_var('plugin_fields', $retval);
+            $template->set_var('plugin_bottom', $retval);
             break;
         case 'footer' :
 
@@ -242,6 +243,17 @@ function plugin_templatesetvars_privacy($templatename, $template)
     }
 }
 
+function plugin_itemPreSave_privacy($type, $content)
+{
+    global $_CONF, $_PV_CONF, $LANG_PRIVACY;
+
+    if ( $type != 'registration') return;
+
+    if ( isset($_POST['privacy-confirm']) && $_POST['privacy-confirm'] == 'on' ) return;
+
+    return 'Please confirm you have read and agree to the terms.';
+
+}
 
 /**
  * Exports user data in XML format

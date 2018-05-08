@@ -1,5 +1,9 @@
-<div class="uk-form-row">
+<div class="uk-form-row uk-margin">
 	<div class="uk-alert uk-alert-warning">
+
+		<input type="checkbox" name="privacy-confirm">&nbsp;
+
+
 		{lang_read}
 {!if termsofuse}
 		{termsofuse}
@@ -11,5 +15,8 @@
 		{privacypolicy}
 	{!endif}
 {!endif}
+
+{lang_posttext}
+
 	</div>
 </div>

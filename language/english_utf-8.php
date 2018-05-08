@@ -24,10 +24,11 @@ if (!defined ('GVERSION')) {
 $LANG_PRIVACY = array (
     'access_denied'     => 'Access Denied',
     'access_denied_msg' => 'You do not have the proper security privilege to access to this page.',
-    'read'              => 'Please read our',
+    'read'              => 'I have read and agree to the ',
     'and'               => 'and',
     'terms'             => 'Terms and Conditions',
     'privacy_policy'    => 'Privacy Policy',
+    'reg_posttext'      => 'statement.',
     'personal_data'     => 'Personal Data',
     'download'          => 'Download Personal Data',
     'download_help'     => 'Export the personal data stored on this site in XML format.',
