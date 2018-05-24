@@ -27,7 +27,7 @@ global $_DB_table_prefix, $_TABLES;
 
 $_PV_CONF['pi_name']            = 'privacy';
 $_PV_CONF['pi_display_name']    = 'privacy';
-$_PV_CONF['pi_version']         = '1.0.0';
+$_PV_CONF['pi_version']         = '1.0.1';
 $_PV_CONF['gl_version']         = '1.7.4';
 $_PV_CONF['pi_url']             = 'https://www.glfusion.org/';
 

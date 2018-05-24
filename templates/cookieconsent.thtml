@@ -19,7 +19,8 @@ window.cookieconsent.initialise({
   "static": true,
 {!endif}
   "content": {
-    "href": "{showlink}"
+    "href": "{showlink}",
+    "message": "{cookiemessage}",
   }
 })});
 </script>

@@ -220,7 +220,7 @@ function plugin_templatesetvars_privacy($templatename, $template)
             break;
         case 'footer' :
 
-            if ( $_PV_CONF['cookieconsent'] != 1 ) return;
+            if ( !isset($_PV_CONF['cookieconsent']) || $_PV_CONF['cookieconsent'] != 1 ) return;
 
             $T = new Template($_CONF['path'] . 'plugins/privacy/templates/');
             $T->set_file ('consent','cookieconsent.thtml');
@@ -229,6 +229,7 @@ function plugin_templatesetvars_privacy($templatename, $template)
                 'theme' => $_PV_CONF['cookiestyle'] == 'block' ? '' : $_PV_CONF['cookiestyle'],
                 'showlink' => $_PV_CONF['cookielearnmore'],
                 'position' => $_PV_CONF['cookieposition'],
+                'cookiemessage' => $_PV_CONF['cookietext'],
             ));
             if ( $_PV_CONF['cookieposition'] == 'top_pushdown' ) {
                 $T->set_var(array(
@@ -309,7 +310,7 @@ function plugin_getheadercode_privacy()
 {
     global $_CONF, $_PV_CONF;
 
-    if ( $_PV_CONF['cookieconsent'] != 1 ) return;
+    if ( !isset($_PV_CONF['cookieconsent']) || $_PV_CONF['cookieconsent'] != 1 ) return;
 
     $outputHandle = outputHandler::getInstance();
     $outputHandle->addLinkScriptFooter($_CONF['site_url'].'/privacy/js/cookieconsent.min.js');
