@@ -33,6 +33,9 @@ function privacy_upgrade()
         case '1.0.0' :
             // fall through
 
+        case '1.0.1' :
+            // no changes
+
         default :
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_PV_CONF['pi_version']."',pi_gl_version='".$_PV_CONF['gl_version']."' WHERE pi_name='privacy' LIMIT 1");
             break;
