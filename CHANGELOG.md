@@ -1,4 +1,6 @@
-# v1.0.2
+# Privacy Plugin ChangeLog
+
+## v1.0.2
   - Fixed typo in language file for confirmation prompt
 
 ## v1.0.1
