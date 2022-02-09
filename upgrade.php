@@ -12,7 +12,7 @@
  * @category   glFusion CMS
  * @package    glFusion
  * @author     Mark R. Evans  mark AT glFusion DOT org
- * @copyright  2018 - Mark R. Evans
+ * @copyright  2018-2021 - Mark R. Evans
  * @license    http://opensource.org/licenses/gpl-2.0.php - GNU Public License v2 or later
  *
  */
@@ -34,6 +34,9 @@ function privacy_upgrade()
             // fall through
 
         case '1.0.1' :
+            // no changes
+
+        case '1.0.2' :
             // no changes
 
         default :
