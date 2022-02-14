@@ -40,6 +40,14 @@ if (file_exists($langfile)) {
     }
 }
 
+if (version_compare(GVERSION,'2.0.0','lt')) {
+    if (isset($LANG_configSelect['privacy']) && !isset($LANG_configselects['privacy'])) {
+        foreach ($LANG_configSelect['privacy'] AS $cfgItem) {
+            $LANG_configselects['privacy'][] = array_flip($cfgItem);
+        }
+    }
+}
+
 $pv_config = config::get_instance();
 $_PV_CONF = $pv_config->get_config('privacy');
 
