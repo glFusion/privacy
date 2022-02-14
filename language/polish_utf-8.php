@@ -1,7 +1,7 @@
 <?php
 /**
  * glFusion Privacy Plugin
- * www.glFusion.pl - glFusion Support Poland
+ *
  * Additional Privacy Controls for glFusion
  *
  * LICENSE: This program is free software; you can redistribute it
@@ -12,7 +12,7 @@
  * @category   glFusion CMS
  * @package    glFusion
  * @author     Mark R. Evans  mark AT glFusion DOT org
- * @copyright  2018 - Mark R. Evans
+ * @copyright  2018-2022 - Mark R. Evans
  * @license    http://opensource.org/licenses/gpl-2.0.php - GNU Public License v2 or later
  *
  */
@@ -63,10 +63,10 @@ $LANG_fs['privacy'] = array(
     'pv_cookie'   => 'Zgoda na ustawienia plików cookie',
 );
 
-$LANG_configselects['privacy'] = array(
-    0 => array('Włącz' => 1, 'Wyłącz' => 0),
-    1 => array('Dolny' => 'bottom', 'Top' => 'top', 'Top (przesunięcie w dół)' => 'top_pushdown', 'Dolny Prawa' => 'bottom-right', 'Dolny Lewa' => 'bottom-left'),
-    2 => array('Blok' => 'block', 'Klasyczny' => 'classic', 'Edgeless' => 'edgeless'),
+$LANG_configSelect['privacy'] = array(
+    0 => array(1 => 'True', 0 => 'False'),
+    1 => array('bottom' => 'Bottom', 'top' => 'Top', 'top_pushdown' => 'Top (pushdown)', 'bottom-right' => 'Float Right', 'bottom-left' => 'Float Left'),
+    2 => array('block' => 'Block', 'classic' => 'Classic', 'edgeless' => 'Edgeless'),
 );
 
 $PLG_privacy_MESSAGE1 = 'Aktualizacja wtyczki prywatności: Aktualizacja zakończona powodzeniem.';
