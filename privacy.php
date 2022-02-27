@@ -12,7 +12,7 @@
  * @category   glFusion CMS
  * @package    glFusion
  * @author     Mark R. Evans  mark AT glFusion DOT org
- * @copyright  2018-2021 - Mark R. Evans
+ * @copyright  2018-2022 - Mark R. Evans
  * @license    http://opensource.org/licenses/gpl-2.0.php - GNU Public License v2 or later
  *
  */
@@ -27,7 +27,7 @@ global $_DB_table_prefix, $_TABLES;
 
 $_PV_CONF['pi_name']            = 'privacy';
 $_PV_CONF['pi_display_name']    = 'privacy';
-$_PV_CONF['pi_version']         = '1.0.3';
+$_PV_CONF['pi_version']         = '1.0.4';
 $_PV_CONF['gl_version']         = '1.7.4';
 $_PV_CONF['pi_url']             = 'https://www.glfusion.org/';
 

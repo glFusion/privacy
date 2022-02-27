@@ -1,5 +1,10 @@
 # Privacy Plugin ChangeLog
 
+## v1.0.4
+
+- Fixed config dropdowns on glFusion LTS (v1.7.x)
+- New Czech Translation
+
 ## v1.0.3
 
 - Added Polish Translation
